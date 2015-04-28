@@ -1,43 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-    
+    android:orientation="vertical" >
+
     <TextView
         android:id="@+id/title"
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:text="Image Processsor"
-    	android:textSize="20sp"/>
-    
-    <Button
-        android:id="@+id/normal_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Revert to normal"
-        />
-    
-    <Button
-        android:id="@+id/gray_button"
-        android:layout_width="wrap_content"
+        android:text="Image Processsor"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Convert to gray"
-        />
-    
-    <Button
-        android:id="@+id/edge_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Generate edges"
-        />
-    
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/normal_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Revert to normal" />
+
+            <Button
+                android:id="@+id/gray_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Convert to gray" />
+
+            <Button
+                android:id="@+id/edge_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Generate edges" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            
+            <Button
+                android:id="@+id/camera_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Take Photo" />
+
+            <Button
+                android:id="@+id/parallel_gray_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Parallel Gray" />
+
+            <Button
+                android:id="@+id/parallel_edge_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Parallel Edges" />
+            
+        </LinearLayout>
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/campanile"
-    />
-    
+        android:src="@drawable/campanile" />
+
 </LinearLayout>

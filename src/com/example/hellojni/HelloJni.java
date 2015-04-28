@@ -130,5 +130,6 @@ public class HelloJni extends Activity
     public native String  stringFromJNI();
     public native void  parallelPrint();
     public native void convertToGray(Bitmap bitmapIn,Bitmap bitmapOut);
+    public native void parallelConvertToGray(Bitmap bitmapIn,Bitmap bitmapOut);
     public native void findEdges(Bitmap bitmapIn, Bitmap bitmapOut);
 }
