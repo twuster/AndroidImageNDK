@@ -18,5 +18,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE    := hello-jni
 LOCAL_SRC_FILES := hello-jni.c
+LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog
+LOCAL_LDFLAGS += -ljnigraphics
 
 include $(BUILD_SHARED_LIBRARY)

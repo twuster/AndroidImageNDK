@@ -16,44 +16,82 @@
 package com.example.hellojni;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.os.Bundle;
 
 
 public class HelloJni extends Activity
 {
+	private TextView mTitle;
+	private Button mGrayButton;
+	private Button mEdgeButton;
+	private ImageView mImage;
+	private Bitmap mBitmapOrig;
+	private Bitmap mBitmapNew;
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_layout);
 
         /* Create a TextView and set its content.
          * the text is retrieved by calling a native
          * function.
          */
-        TextView  tv = new TextView(this);
-        tv.setText( stringFromJNI() );
-        setContentView(tv);
+        mTitle = (TextView) findViewById(R.layout.main_layout);
+        mGrayButton = (Button) findViewById(R.id.gray_button);
+        mEdgeButton = (Button) findViewById(R.id.edge_button);
+        mImage = (ImageView) findViewById(R.id.image);
+        
+     // load bitmap from resources
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // Make sure it is 24 bit color as our image processing algorithm 
+		// expects this format
+        options.inPreferredConfig = Config.ARGB_8888;
+        mBitmapOrig = BitmapFactory.decodeResource(this.getResources(), R.drawable.campanile, options);
+        if (mBitmapOrig != null) {
+            mImage.setImageBitmap(mBitmapOrig);
+        }
+        
+        mGrayButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+//				getString();
+				mBitmapNew = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
+						Config.ALPHA_8);
+				convertToGray(mBitmapOrig, mBitmapNew);
+				mImage.setImageBitmap(mBitmapNew);
+			}
+        	
+        });
+        
+        mEdgeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Bitmap greyBitmap = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
+						Config.ALPHA_8);
+				convertToGray(mBitmapOrig, greyBitmap);
+				mBitmapNew = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
+						Config.ALPHA_8);
+				findEdges(greyBitmap, mBitmapNew);
+				mImage.setImageBitmap(mBitmapNew);
+			}
+        	
+        });
     }
-
-    /* A native method that is implemented by the
-     * 'hello-jni' native library, which is packaged
-     * with this application.
-     */
-    public native String  stringFromJNI();
-
-    /* This is another native method declaration that is *not*
-     * implemented by 'hello-jni'. This is simply to show that
-     * you can declare as many native methods in your Java code
-     * as you want, their implementation is searched in the
-     * currently loaded native libraries only the first time
-     * you call them.
-     *
-     * Trying to call this function will result in a
-     * java.lang.UnsatisfiedLinkError exception !
-     */
-    public native String  unimplementedStringFromJNI();
 
     /* this is used to load the 'hello-jni' library on application
      * startup. The library has already been unpacked into
@@ -63,4 +101,13 @@ public class HelloJni extends Activity
     static {
         System.loadLibrary("hello-jni");
     }
+    
+    /* A native method that is implemented by the
+     * 'hello-jni' native library, which is packaged
+     * with this application.
+     */
+    public native String  stringFromJNI();
+    public native String  getString();
+    public native void convertToGray(Bitmap bitmapIn,Bitmap bitmapOut);
+    public native void findEdges(Bitmap bitmapIn, Bitmap bitmapOut);
 }
