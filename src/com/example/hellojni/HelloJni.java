@@ -76,6 +76,7 @@ public class HelloJni extends Activity
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				parallelPrint();
 				Drawable originalImage = sContext.getDrawable(R.drawable.campanile);
 				mImage.setImageResource(R.drawable.campanile);
 			}
@@ -127,7 +128,7 @@ public class HelloJni extends Activity
      * with this application.
      */
     public native String  stringFromJNI();
-    public native String  getString();
+    public native void  parallelPrint();
     public native void convertToGray(Bitmap bitmapIn,Bitmap bitmapOut);
     public native void findEdges(Bitmap bitmapIn, Bitmap bitmapOut);
 }
