@@ -15,10 +15,13 @@
  */
 package com.example.hellojni;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -29,9 +32,11 @@ import android.os.Bundle;
 
 public class HelloJni extends Activity
 {
+	private static Context sContext;
 	private TextView mTitle;
 	private Button mGrayButton;
 	private Button mEdgeButton;
+	private Button mNormalButton;
 	private ImageView mImage;
 	private Bitmap mBitmapOrig;
 	private Bitmap mBitmapNew;
@@ -47,9 +52,12 @@ public class HelloJni extends Activity
          * the text is retrieved by calling a native
          * function.
          */
+        sContext = this;
+        
         mTitle = (TextView) findViewById(R.layout.main_layout);
         mGrayButton = (Button) findViewById(R.id.gray_button);
         mEdgeButton = (Button) findViewById(R.id.edge_button);
+        mNormalButton = (Button) findViewById(R.id.normal_button);
         mImage = (ImageView) findViewById(R.id.image);
         
      // load bitmap from resources
@@ -61,6 +69,18 @@ public class HelloJni extends Activity
         if (mBitmapOrig != null) {
             mImage.setImageBitmap(mBitmapOrig);
         }
+        
+        mNormalButton.setOnClickListener(new OnClickListener() {
+
+			@SuppressLint("NewApi")
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Drawable originalImage = sContext.getDrawable(R.drawable.campanile);
+				mImage.setImageResource(R.drawable.campanile);
+			}
+        	
+        });
         
         mGrayButton.setOnClickListener(new OnClickListener() {
 
