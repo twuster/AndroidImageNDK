@@ -37,6 +37,9 @@ public class HelloJni extends Activity
 	private Button mGrayButton;
 	private Button mEdgeButton;
 	private Button mNormalButton;
+	private Button mCameraButton;
+	private Button mParallelEdgeButton;
+	private Button mParallelGrayButton;
 	private ImageView mImage;
 	private Bitmap mBitmapOrig;
 	private Bitmap mBitmapNew;
@@ -58,6 +61,9 @@ public class HelloJni extends Activity
         mGrayButton = (Button) findViewById(R.id.gray_button);
         mEdgeButton = (Button) findViewById(R.id.edge_button);
         mNormalButton = (Button) findViewById(R.id.normal_button);
+        mCameraButton = (Button) findViewById(R.id.camera_button);
+        mParallelEdgeButton = (Button) findViewById(R.id.parallel_edge_button);
+        mParallelGrayButton = (Button) findViewById(R.id.parallel_gray_button);
         mImage = (ImageView) findViewById(R.id.image);
         
      // load bitmap from resources
@@ -112,6 +118,43 @@ public class HelloJni extends Activity
 			}
         	
         });
+        
+        mCameraButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Launch Camera
+			}
+        	
+        });
+        
+        mParallelGrayButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mBitmapNew = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
+						Config.ALPHA_8);
+				parallelConvertToGray(mBitmapOrig, mBitmapNew);
+				mImage.setImageBitmap(mBitmapNew);
+			}
+        	
+        });
+        
+        mParallelEdgeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Bitmap greyBitmap = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
+						Config.ALPHA_8);
+				parallelConvertToGray(mBitmapOrig, greyBitmap);
+				mBitmapNew = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
+						Config.ALPHA_8);
+				parallelFindEdges(greyBitmap, mBitmapNew);
+				mImage.setImageBitmap(mBitmapNew);
+			}
+        	
+        });
     }
 
     /* this is used to load the 'hello-jni' library on application
@@ -130,5 +173,7 @@ public class HelloJni extends Activity
     public native String  stringFromJNI();
     public native void  parallelPrint();
     public native void convertToGray(Bitmap bitmapIn,Bitmap bitmapOut);
+    public native void parallelConvertToGray(Bitmap bitmapIn,Bitmap bitmapOut);
     public native void findEdges(Bitmap bitmapIn, Bitmap bitmapOut);
+    public native void parallelFindEdges(Bitmap bitmapIn, Bitmap bitmapOut);
 }
