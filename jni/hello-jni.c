@@ -405,11 +405,11 @@ void Java_com_example_hellojni_HelloJni_parallelFindEdges(JNIEnv
 
 	graydata = (uint8_t *) pixelsgray;
 	edgedata = (uint8_t *) pixelsedge;
-
-//#pragma omp parallel for
+	#pragma omp parallel for private(x)
 	for (y=0;y<=infogray.height - 1;y++) {
-		#pragma omp parallel for private(x)
+
 		for (x=0;x<infogray.width -1;x++) {
+//		#pragma omp parallel for private(y)
 			sumX = 0;
 			sumY = 0;
 			// check boundaries
