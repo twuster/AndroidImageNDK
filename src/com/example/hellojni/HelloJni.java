@@ -111,7 +111,11 @@ public class HelloJni extends Activity
 				//				getString();
 				mBitmapNew = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
 						Config.ALPHA_8);
+				long startTime = System.nanoTime();
 				convertToGray(mBitmapOrig, mBitmapNew);
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime)/ 1000000;
+				Toast.makeText(sContext, "Operation took " + duration +" milliseconds", Toast.LENGTH_SHORT).show();
 				mImage.setImageBitmap(mBitmapNew);
 			}
 
@@ -126,7 +130,11 @@ public class HelloJni extends Activity
 				convertToGray(mBitmapOrig, greyBitmap);
 				mBitmapNew = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
 						Config.ALPHA_8);
+				long startTime = System.nanoTime();
 				findEdges(greyBitmap, mBitmapNew);
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime)/ 1000000;
+				Toast.makeText(sContext, "Operation took " + duration +" milliseconds", Toast.LENGTH_SHORT).show();
 				mImage.setImageBitmap(mBitmapNew);
 			}
 
@@ -161,7 +169,12 @@ public class HelloJni extends Activity
 				// TODO Auto-generated method stub
 				mBitmapNew = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
 						Config.ALPHA_8);
+				long startTime = System.nanoTime();
 				parallelConvertToGray(mBitmapOrig, mBitmapNew);
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime)/ 1000000;
+				Toast.makeText(sContext, "Operation took " + duration +" milliseconds", Toast.LENGTH_SHORT).show();
+				
 				mImage.setImageBitmap(mBitmapNew);
 			}
 
@@ -173,10 +186,16 @@ public class HelloJni extends Activity
 			public void onClick(View v) {
 				Bitmap greyBitmap = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
 						Config.ALPHA_8);
-				parallelConvertToGray(mBitmapOrig, greyBitmap);
+				convertToGray(mBitmapOrig, greyBitmap);
 				mBitmapNew = Bitmap.createBitmap(mBitmapOrig.getWidth(), mBitmapOrig.getHeight(),
 						Config.ALPHA_8);
+				
+				long startTime = System.nanoTime();
 				parallelFindEdges(greyBitmap, mBitmapNew);
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime)/ 1000000;
+				Toast.makeText(sContext, "Operation took " + duration +" milliseconds", Toast.LENGTH_SHORT).show();
+				
 				mImage.setImageBitmap(mBitmapNew);
 			}
 
