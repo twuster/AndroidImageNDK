@@ -47,7 +47,6 @@ public class HelloJni extends Activity
 	private static final int REQUEST_IMAGE_CAPTURE = 1;
 
 	private static Context sContext;
-	private TextView mTitle;
 	private Button mGrayButton;
 	private Button mEdgeButton;
 	private Button mNormalButton;
@@ -73,7 +72,6 @@ public class HelloJni extends Activity
 		 */
 		sContext = this;
 
-		mTitle = (TextView) findViewById(R.layout.main_layout);
 		mGrayButton = (Button) findViewById(R.id.gray_button);
 		mEdgeButton = (Button) findViewById(R.id.edge_button);
 		mNormalButton = (Button) findViewById(R.id.normal_button);

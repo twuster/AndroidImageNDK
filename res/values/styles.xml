@@ -3,8 +3,7 @@
     <style
         name="app_style"
         parent="android:Theme.Holo.Light">
-        <item name="android:windowActionBar">false</item>
-    	<item name="android:windowNoTitle">true</item>
+        <item name="android:icon">@android:color/transparent</item>
     </style>
     
 </resources>
