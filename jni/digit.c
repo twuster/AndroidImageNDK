@@ -65,7 +65,7 @@ void Java_com_example_hellojni_HelloJni_digitRecognition(int* image, double* all
   points_buf_idx = 0;
   for (y = 0; y < height; y++) {
     for (x = 0; x < height; x++) {
-      if image[y*width + x] > 128 {
+      if (image[y*width + x] > 128) {
         points_buf[points_buf_idx] = y;
         points_buf[points_buf_idx+1] = x;
         points_buf_idx++;

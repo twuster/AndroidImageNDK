@@ -15,8 +15,11 @@
  */
 package com.example.hellojni;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -53,6 +56,8 @@ public class HelloJni extends Activity
 	private Button mCameraButton;
 	private Button mParallelEdgeButton;
 	private Button mParallelGrayButton;
+	private Button mParallelPredictButton;
+	private Button mPredictButton;
 	private ImageView mImage;
 	private Bitmap mBitmapOrig;
 	private Bitmap mBitmapNew;
@@ -78,6 +83,8 @@ public class HelloJni extends Activity
 		mCameraButton = (Button) findViewById(R.id.camera_button);
 		mParallelEdgeButton = (Button) findViewById(R.id.parallel_edge_button);
 		mParallelGrayButton = (Button) findViewById(R.id.parallel_gray_button);
+		mPredictButton = (Button) findViewById(R.id.predict_button);
+		mParallelPredictButton = (Button) findViewById(R.id.parallel_predict_button);
 		mImage = (ImageView) findViewById(R.id.image);
 
 		// load bitmap from resources
@@ -85,7 +92,7 @@ public class HelloJni extends Activity
 		// Make sure it is 24 bit color as our image processing algorithm 
 		// expects this format
 		options.inPreferredConfig = Config.ARGB_8888;
-		mBitmapOrig = BitmapFactory.decodeResource(this.getResources(), R.drawable.campanile, options);
+		mBitmapOrig = BitmapFactory.decodeResource(this.getResources(), R.drawable.test2, options);
 		if (mBitmapOrig != null) {
 			mImage.setImageBitmap(mBitmapOrig);
 		}
@@ -198,6 +205,55 @@ public class HelloJni extends Activity
 			}
 
 		});
+		
+		mParallelPredictButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Bitmap greyBitmap = Bitmap.createBitmap(mBitmapOrig.getWidth(),
+														mBitmapOrig.getHeight(),
+														Config.ALPHA_8);
+				Bitmap edgesBitmap = Bitmap.createBitmap(mBitmapOrig.getWidth(),
+														 mBitmapOrig.getHeight(),
+														 Config.ALPHA_8);
+				convertToGray(mBitmapOrig, greyBitmap);
+				findEdges(greyBitmap, edgesBitmap);
+				InputStream wt1 = getResources().openRawResource(R.raw.final_w1);
+				InputStream wt2 = getResources().openRawResource(R.raw.final_w2);
+				double[] weight1Matrix = readWeightMatrix(wt1, 784, 200);
+				double[] weight2Matrix = readWeightMatrix(wt2, 200, 10);
+				long startTime = System.nanoTime();
+				String digits = predict(greyBitmap, weight1Matrix, weight2Matrix, 1);
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime)/1000000;
+				Toast.makeText(sContext, "Digits predicted were " + digits + 
+						" and operation took " + duration + " ms", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		mPredictButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Bitmap greyBitmap = Bitmap.createBitmap(mBitmapOrig.getWidth(),
+														mBitmapOrig.getHeight(),
+														Config.ALPHA_8);
+				Bitmap edgesBitmap = Bitmap.createBitmap(mBitmapOrig.getWidth(),
+														 mBitmapOrig.getHeight(),
+														 Config.ALPHA_8);
+				convertToGray(mBitmapOrig, greyBitmap);
+				findEdges(greyBitmap, edgesBitmap);
+				InputStream wt1 = getResources().openRawResource(R.raw.final_w1);
+				InputStream wt2 = getResources().openRawResource(R.raw.final_w2);
+				double[] weight1Matrix = readWeightMatrix(wt1, 784, 200);
+				double[] weight2Matrix = readWeightMatrix(wt2, 200, 10);
+				long startTime = System.nanoTime();
+				String digits = predict(greyBitmap, weight1Matrix, weight2Matrix, 0);
+				long endTime = System.nanoTime();
+				long duration = (endTime - startTime)/1000000;
+				Toast.makeText(sContext, "Digits predicted were " + digits + 
+						" and operation took " + duration + " ms", Toast.LENGTH_SHORT).show();
+				mImage.setImageBitmap(edgesBitmap);
+			}
+		});
 	}
 
 	@Override
@@ -231,6 +287,40 @@ public class HelloJni extends Activity
 				// Image capture failed, advise user
 			}
 		}
+	}
+	
+	private double[] readWeightMatrix(InputStream is,
+										int numRows,
+										int numCols) {
+		double[] weights = new double[numRows*numCols];
+		
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		try {
+			int rowIdx = 0;
+			String line;
+			while((line = reader.readLine()) != null) {
+				String[] row = line.split(",");
+				int colIdx = 0;
+				for (String elem : row) {
+					weights[rowIdx*numCols + colIdx] = Double.parseDouble(elem.trim());
+					colIdx += 1;
+				}
+				rowIdx += 1;
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				is.close();
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return weights;
 	}
 
 	private File createImageFile() throws IOException {
@@ -269,4 +359,5 @@ public class HelloJni extends Activity
 	public native void parallelConvertToGray(Bitmap bitmapIn,Bitmap bitmapOut);
 	public native void findEdges(Bitmap bitmapIn, Bitmap bitmapOut);
 	public native void parallelFindEdges(Bitmap bitmapIn, Bitmap bitmapOut);
+	public native String predict(Bitmap bitmapIn, double[] weight1, double[] weight2, int parallel);
 }
